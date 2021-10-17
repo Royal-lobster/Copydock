@@ -185,18 +185,18 @@ export default function pastePage({ APP_URL, BITLY_TOKEN }) {
             <Tooltip
               wrapLines
               width={220}
-              transition="slide-up"
+              transition="slide-down"
               transitionDuration={300}
               transitionTimingFunction="ease"
-              label="If turned OFF, the paragraphs will not break and be in single line. Keep this ON if your are pasting normal text. Turn this OFF if you are pasting code"
+              label="If turned ON, the lines will not break and be in single line. Keep this OFF if your are pasting normal text. Turn this ON if you are pasting code"
               withArrow
             >
               <Switch
                 style={{ backgroundColor: "#2C2E33", padding: "9px", borderRadius: "4px" }}
-                checked={doWordWrap}
+                checked={!doWordWrap}
                 radius="xs"
-                onChange={(event) => setDoWordWrap(event.currentTarget.checked)}
-                label="Word Wrap"
+                onChange={(event) => setDoWordWrap(!event.currentTarget.checked)}
+                label="Code Mode"
               />
             </Tooltip>
           </Group>
