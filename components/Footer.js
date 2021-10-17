@@ -33,12 +33,14 @@ function Footer() {
           border-bottom: 1px dotted #ccc;
           padding-bottom: 1px;
         }
-        @media only screen and (max-width: 400px) {
+        @media only screen and (max-width: 500px) {
           .footer {
             border-radius: 0px;
           }
           .footer p {
-            font-size: 14px;
+            font-size: 16px;
+            margin: 0;
+            padding: 20px;
           }
         }
       `}</style>

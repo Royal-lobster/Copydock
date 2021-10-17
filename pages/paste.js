@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Textarea, Space, Input, ColorSwatch, Group, Popover, Text } from "@mantine/core";
+import { Button, Textarea, Space, Input, ColorSwatch, Group, Popover, Text, Switch, Tooltip } from "@mantine/core";
 import LZUTF8 from "lzutf8";
 import { useClipboard } from "@mantine/hooks";
 import { useNotifications } from "@mantine/notifications";
@@ -27,25 +27,28 @@ export default function pastePage({ APP_URL, BITLY_TOKEN }) {
   const [pasteTitleValue, setPasteTitleValue] = useState("");
   const [opened, setOpened] = useState(false);
   const [shortLink, setShortLink] = useState("");
+  const [doShorten, setDoShorten] = useState(true);
 
   // functions
   const handleLinkCopyRequest = async () => {
     // generate a url with the data
     let compressed = await LZUTF8.compress(pasteValue, { outputEncoding: "Base64" });
     let generatedURL = `${APP_URL}/copy?title=${pasteTitleValue}&color=${pasteColorValue}&data=${compressed}`;
-
+    let body = {};
     // shorten the generated url with bitly
-    const response = await fetch("https://api-ssl.bitly.com/v4/bitlinks", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${BITLY_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        long_url: generatedURL,
-      }),
-    });
-    const body = await response.json();
+    if (doShorten) {
+      const response = await fetch("https://api-ssl.bitly.com/v4/bitlinks", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${BITLY_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          long_url: generatedURL,
+        }),
+      });
+      const body = await response.json();
+    }
     // copy the url in the clipboard
     if (body?.link) {
       clipboard.copy(body.link);
@@ -134,26 +137,44 @@ export default function pastePage({ APP_URL, BITLY_TOKEN }) {
             maxRows={20}
           />
           <Space h="md" />
-          <Popover
-            opened={opened}
-            onClose={() => setOpened(false)}
-            target={
-              <Button color="blue" type="submit" leftIcon={<ClipboardCopyIcon />} onClick={handleLinkCopyRequest}>
-                {clipboard.copied ? "Copied to Clipboard" : "Copy URL to Share"}
-              </Button>
-            }
-            position="bottom"
-            withArrow
-          >
-            <div>
-              <Text size="sm">
-                Share URL:{" "}
-                <a href={shortLink} style={{ color: "#FB5B45" }}>
-                  {shortLink}
-                </a>
-              </Text>
-            </div>
-          </Popover>
+          <Group>
+            <Popover
+              opened={opened}
+              onClose={() => setOpened(false)}
+              target={
+                <Button color="blue" type="submit" leftIcon={<ClipboardCopyIcon />} onClick={handleLinkCopyRequest}>
+                  {clipboard.copied ? "Copied to Clipboard" : "Copy URL to Share"}
+                </Button>
+              }
+              position="bottom"
+              withArrow
+            >
+              <div>
+                <Text size="sm">
+                  Share URL:{" "}
+                  <a href={shortLink} style={{ color: "#FB5B45" }}>
+                    {shortLink}
+                  </a>
+                </Text>
+              </div>
+            </Popover>
+            <Tooltip
+              wrapLines
+              width={220}
+              transition="slide-right"
+              transitionDuration={300}
+              transitionTimingFunction="ease"
+              label="If turned on, the link will be shortened with bit.ly service. Please turn this off if you are sharing confidential information"
+              withArrow
+            >
+              <Switch
+                checked={doShorten}
+                radius="xs"
+                onChange={(event) => setDoShorten(event.currentTarget.checked)}
+                label="Shorten link"
+              />
+            </Tooltip>
+          </Group>
         </div>
       </div>
       <Footer />
