@@ -23,7 +23,7 @@
     "url-query-parser": "^2.0.6"
   },
   "devDependencies": {
-    "eslint": "8.0.1",
+    "eslint": "^8.0.1",
     "eslint-config-next": "11.1.2"
   }
 }
