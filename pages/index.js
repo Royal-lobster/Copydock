@@ -15,7 +15,7 @@ function index() {
     e.preventDefault();
     let compressed = await LZUTF8.compress(pasteValue, { outputEncoding: "Base64" });
     console.log("http://localhost:3000/copy?data=" + compressed);
-    clipboard.copy("http://localhost:3000/copy?data=" + compressed);
+    clipboard.copy("http://copydock.vercel.app/copy?data=" + compressed);
     notifications.showNotification({
       title: "Copied To Clipboard",
       message: "The Share URL is copied to clipboard !",
