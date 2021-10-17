@@ -47,8 +47,8 @@ function copyPage() {
             </Group>
           </div>
           <Prism
-            language="javascript"
-            withLineNumbers
+            language={queries.wordwrap != "true" ? "javascript" : false}
+            withLineNumbers={queries.wordwrap != "true"}
             copyLabel="Copy code to clipboard"
             copiedLabel="Code copied to clipboard"
             className="copyPage__copyArea"

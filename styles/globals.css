@@ -1,6 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Damion&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap");
 
+:root {
+  color-scheme: dark;
+}
 html,
 body {
   padding: 0;
