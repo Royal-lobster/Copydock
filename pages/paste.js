@@ -35,7 +35,7 @@ export default function pastePage({ APP_URL, BITLY_TOKEN }) {
     // generate a url with the data
     let compressed = await LZUTF8.compress(pasteValue, { outputEncoding: "Base64" });
     let generatedURL = `${APP_URL}/copy?title=${pasteTitleValue}&color=${pasteColorValue}&wordwrap=${doWordWrap}&data=${compressed}`;
-    let body = {};
+
     // shorten the generated url with bitly
     if (doShorten) {
       const response = await fetch("https://api-ssl.bitly.com/v4/bitlinks", {
@@ -49,16 +49,22 @@ export default function pastePage({ APP_URL, BITLY_TOKEN }) {
         }),
       });
       const body = await response.json();
-    }
-    // copy the url in the clipboard
-    if (body?.link) {
-      clipboard.copy(body.link);
-      setShortLink(body.link);
-      setOpened(true);
-      notifications.showNotification({
-        title: "Copied To Clipboard",
-        message: "Share URL : " + body.link,
-      });
+      // copy the url in the clipboard
+      if (body?.link) {
+        clipboard.copy(body.link);
+        setShortLink(body.link);
+        setOpened(true);
+        notifications.showNotification({
+          title: "Copied To Clipboard",
+          message: "Share URL : " + body.link,
+        });
+      } else {
+        clipboard.copy(generatedURL);
+        notifications.showNotification({
+          title: "Copied To Clipboard",
+          message: "The Share URL is copied to clipboard !",
+        });
+      }
     } else {
       clipboard.copy(generatedURL);
       notifications.showNotification({
