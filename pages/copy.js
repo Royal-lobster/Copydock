@@ -35,7 +35,7 @@ function copyPage() {
               <span style={{ color: "#999999", fontWeight: "600" }}>FileName :</span>{" "}
               {queries.title ? queries.title : "Untitled"}
             </Title>
-            <Group>
+            <Group classname="copy__HeadBtnGrp">
               <Button style={{ display: "block" }} leftIcon={<CopyIcon />} onClick={() => clipboard.copy(pasteData)}>
                 {clipboard.copied ? "Copied" : "Copy"}
               </Button>
@@ -90,12 +90,12 @@ function copyPage() {
           display: inline-block;
           border-radius: 4px;
         }
-        @media only screen and (max-width: 400px) {
+        @media only screen and (max-width: 450px) {
           .copyPage__containerHead {
             flex-direction: column;
+            gap: 20px;
           }
           .copyPage__title {
-            margin-bottom: 20px;
             width: 100%;
           }
         }
