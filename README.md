@@ -1,2 +1,2 @@
 # Copydock - Copy Paste App
-<img src="./screenshot.png" />
+<img src="./Screenshot.png" />
