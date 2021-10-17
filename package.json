@@ -1,0 +1,26 @@
+{
+  "name": "copydock",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@mantine/core": "^3.0.5",
+    "@mantine/dropzone": "^3.0.5",
+    "@mantine/hooks": "^3.0.5",
+    "@mantine/notifications": "^3.0.5",
+    "@mantine/prism": "^3.0.5",
+    "lzutf8": "^0.6.0",
+    "next": "11.1.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "eslint": "8.0.1",
+    "eslint-config-next": "11.1.2"
+  }
+}
