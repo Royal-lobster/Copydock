@@ -20,8 +20,3 @@ a {
 body {
   background-color: #1a1b1e;
 }
-code[class*="language-"],
-pre[class*="language-"] {
-  white-space: normal !important;
-  word-break: break-word !important;
-}

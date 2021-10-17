@@ -15,10 +15,12 @@ function copyPage() {
   const [pasteData, setPasteData] = useState("");
   const clipboard = useClipboard({ timeout: 3000 });
 
+  useEffect(() => {
+    console.log(queries.wordwrap);
+  }, [queries]);
   useEffect(async () => {
     let fetchedQueries = queryString.parse(router.asPath.split("?")[1]);
     await setQueries(fetchedQueries);
-
     const compressed = /(?<=\&data=).*/g.exec(router.asPath)[0];
     const decompressed = await LZUTF8.decompress(compressed, { inputEncoding: "Base64" });
     setPasteData(decompressed);
@@ -89,6 +91,12 @@ function copyPage() {
           padding: 10px;
           display: inline-block;
           border-radius: 4px;
+        }
+        code[class*="language-"],
+        pre[class*="language-"] {
+          tab-size: 4;
+          white-space: ${queries.wordwrap == "true" ? "normal !important" : "none"};
+          word-break: ${queries.wordwrap == "true" ? "break-word !important" : "unset"};
         }
         @media only screen and (max-width: 450px) {
           .copyPage__containerHead {

@@ -28,12 +28,13 @@ export default function pastePage({ APP_URL, BITLY_TOKEN }) {
   const [opened, setOpened] = useState(false);
   const [shortLink, setShortLink] = useState("");
   const [doShorten, setDoShorten] = useState(true);
+  const [doWordWrap, setDoWordWrap] = useState(true);
 
   // functions
   const handleLinkCopyRequest = async () => {
     // generate a url with the data
     let compressed = await LZUTF8.compress(pasteValue, { outputEncoding: "Base64" });
-    let generatedURL = `${APP_URL}/copy?title=${pasteTitleValue}&color=${pasteColorValue}&data=${compressed}`;
+    let generatedURL = `${APP_URL}/copy?title=${pasteTitleValue}&color=${pasteColorValue}&wordwrap=${doWordWrap}&data=${compressed}`;
     let body = {};
     // shorten the generated url with bitly
     if (doShorten) {
@@ -164,14 +165,32 @@ export default function pastePage({ APP_URL, BITLY_TOKEN }) {
               transition="slide-right"
               transitionDuration={300}
               transitionTimingFunction="ease"
-              label="If turned on, the link will be shortened with bit.ly service. Please turn this off if you are sharing confidential information"
+              label="If turned OFF, the link will NOT be shortened with bit.ly service. Please turn this OFF if you are sharing confidential information"
               withArrow
             >
               <Switch
+                style={{ backgroundColor: "#2C2E33", padding: "9px", borderRadius: "4px" }}
                 checked={doShorten}
                 radius="xs"
                 onChange={(event) => setDoShorten(event.currentTarget.checked)}
                 label="Shorten link"
+              />
+            </Tooltip>
+            <Tooltip
+              wrapLines
+              width={220}
+              transition="slide-up"
+              transitionDuration={300}
+              transitionTimingFunction="ease"
+              label="If turned OFF, the paragraphs will not break and be in single line. Keep this ON if your are pasting normal text. Turn this OFF if you are pasting code"
+              withArrow
+            >
+              <Switch
+                style={{ backgroundColor: "#2C2E33", padding: "9px", borderRadius: "4px" }}
+                checked={doWordWrap}
+                radius="xs"
+                onChange={(event) => setDoWordWrap(event.currentTarget.checked)}
+                label="Word Wrap"
               />
             </Tooltip>
           </Group>
