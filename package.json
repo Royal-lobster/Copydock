@@ -14,10 +14,13 @@
     "@mantine/hooks": "^3.0.5",
     "@mantine/notifications": "^3.0.5",
     "@mantine/prism": "^3.0.5",
+    "@modulz/radix-icons": "^4.0.0",
     "lzutf8": "^0.6.0",
     "next": "11.1.2",
+    "query-string": "^7.0.1",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "url-query-parser": "^2.0.6"
   },
   "devDependencies": {
     "eslint": "8.0.1",

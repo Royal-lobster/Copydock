@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Damion&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap");
+
 html,
 body {
   padding: 0;
@@ -16,4 +19,9 @@ a {
 }
 body {
   background-color: #1a1b1e;
+}
+code[class*="language-"],
+pre[class*="language-"] {
+  white-space: normal !important;
+  word-break: break-word !important;
 }
