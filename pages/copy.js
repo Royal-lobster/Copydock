@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import LZUTF8, { compress } from "lzutf8";
+import LZUTF8 from "lzutf8";
 import { Prism } from "@mantine/prism";
 import { Title, Space, Button, Group } from "@mantine/core";
 import queryString from "query-string";
@@ -8,6 +8,7 @@ import { CopyIcon, FilePlusIcon } from "@modulz/radix-icons";
 import { useClipboard } from "@mantine/hooks";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import truncateString from "../utils/truncateString";
 
 function copyPage() {
   const router = useRouter();
@@ -35,9 +36,9 @@ function copyPage() {
           <div className="copyPage__containerHead">
             <Title className="copyPage__title" order={5}>
               <span style={{ color: "#999999", fontWeight: "600" }}>FileName :</span>{" "}
-              {queries.title ? queries.title : "Untitled"}
+              {queries.title ? truncateString(queries.title, 40) : "Untitled"}
             </Title>
-            <Group classname="copy__HeadBtnGrp">
+            <Group className="copy__HeadBtnGrp">
               <Button style={{ display: "block" }} leftIcon={<CopyIcon />} onClick={() => clipboard.copy(pasteData)}>
                 {clipboard.copied ? "Copied" : "Copy"}
               </Button>
