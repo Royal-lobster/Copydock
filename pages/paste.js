@@ -1,5 +1,17 @@
 import React, { useState } from "react";
-import { Button, Textarea, Space, Input, ColorSwatch, Group, Popover, Text, Switch, Tooltip } from "@mantine/core";
+import {
+  Button,
+  Textarea,
+  Space,
+  Input,
+  LoadingOverlay,
+  ColorSwatch,
+  Group,
+  Popover,
+  Text,
+  Switch,
+  Tooltip,
+} from "@mantine/core";
 import LZUTF8 from "lzutf8";
 import { useClipboard } from "@mantine/hooks";
 import { useNotifications } from "@mantine/notifications";
@@ -11,12 +23,12 @@ export const getStaticProps = async () => {
   return {
     props: {
       APP_URL: process.env.APPLICATION_URL,
-      BITLY_TOKEN: process.env.BITLY_ACCESS_TOKEN,
+      TINYURL_TOKEN: process.env.TINYURL_ACCESS_TOKEN,
     },
   };
 };
 
-export default function pastePage({ APP_URL, BITLY_TOKEN }) {
+export default function pastePage({ APP_URL, TINYURL_TOKEN }) {
   // mantime hooks
   const clipboard = useClipboard({ timeout: 3000 });
   const notifications = useNotifications();
@@ -29,34 +41,35 @@ export default function pastePage({ APP_URL, BITLY_TOKEN }) {
   const [shortLink, setShortLink] = useState("");
   const [doShorten, setDoShorten] = useState(true);
   const [doWordWrap, setDoWordWrap] = useState(true);
-
+  const [loading, setLoading] = useState(false);
   // functions
   const handleLinkCopyRequest = async () => {
+    setLoading(true);
     // generate a url with the data
     let compressed = await LZUTF8.compress(pasteValue, { outputEncoding: "Base64" });
     let generatedURL = `${APP_URL}/copy?title=${pasteTitleValue}&color=${pasteColorValue}&wordwrap=${doWordWrap}&data=${compressed}`;
 
-    // shorten the generated url with bitly
+    // shorten the generated url with TINYURL
     if (doShorten) {
-      const response = await fetch("https://api-ssl.bitly.com/v4/bitlinks", {
+      const response = await fetch("https://api.tinyurl.com/create", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${BITLY_TOKEN}`,
+          Authorization: `Bearer ${TINYURL_TOKEN}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          long_url: generatedURL,
+          url: generatedURL,
         }),
       });
       const body = await response.json();
       // copy the url in the clipboard
-      if (body?.link) {
-        clipboard.copy(body.link);
-        setShortLink(body.link);
+      if (body?.data?.tiny_url) {
+        clipboard.copy(body.data.tiny_url);
+        setShortLink(body.data.tiny_url);
         setOpened(true);
         notifications.showNotification({
           title: "Copied To Clipboard",
-          message: "Share URL : " + body.link,
+          message: "Share URL : " + body.data.tiny_url,
         });
       } else {
         clipboard.copy(generatedURL);
@@ -72,6 +85,7 @@ export default function pastePage({ APP_URL, BITLY_TOKEN }) {
         message: "The Share URL is copied to clipboard !",
       });
     }
+    setLoading(false);
   };
 
   return (
@@ -149,8 +163,20 @@ export default function pastePage({ APP_URL, BITLY_TOKEN }) {
               opened={opened}
               onClose={() => setOpened(false)}
               target={
-                <Button color="blue" type="submit" leftIcon={<ClipboardCopyIcon />} onClick={handleLinkCopyRequest}>
+                <Button
+                  color="blue"
+                  style={{ position: "relative" }}
+                  type="submit"
+                  leftIcon={<ClipboardCopyIcon />}
+                  onClick={handleLinkCopyRequest}
+                >
                   {clipboard.copied ? "Copied to Clipboard" : "Copy URL to Share"}
+                  <LoadingOverlay
+                    overlayOpacity={1}
+                    overlayColor="#1971c2"
+                    loaderProps={{ size: "sm", color: "white", variant: "bars" }}
+                    visible={loading}
+                  />
                 </Button>
               }
               position="bottom"
@@ -171,7 +197,7 @@ export default function pastePage({ APP_URL, BITLY_TOKEN }) {
               transition="slide-right"
               transitionDuration={300}
               transitionTimingFunction="ease"
-              label="If turned OFF, the link will NOT be shortened with bit.ly service. Please turn this OFF if you are sharing confidential information"
+              label="If turned OFF, the link will NOT be shortened. Please turn this OFF if you are sharing CONFIDENTIAL information"
               withArrow
             >
               <Switch
