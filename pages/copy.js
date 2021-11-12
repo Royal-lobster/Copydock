@@ -81,6 +81,7 @@ function copyPage() {
         }
         .copyPage__containerHead {
           display: flex;
+          gap: 10px;
           justify-content: space-between;
           align-items: center;
         }
