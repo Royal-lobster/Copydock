@@ -263,6 +263,7 @@ export default function pastePage({ APP_URL, TINYURL_TOKEN }) {
           padding: "0 10px";
         }
         .pastePage__pasteAreaTextarea textarea {
+          font-family: monospace !important;
           height: 70vw;
         }
         @media only screen and (max-width: 500px) {

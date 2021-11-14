@@ -97,7 +97,7 @@ function copyPage() {
         code[class*="language-"],
         pre[class*="language-"] {
           tab-size: 4;
-          white-space: ${queries.wordwrap == "true" ? "normal !important" : "none"};
+          white-space: ${queries.wordwrap == "true" ? "pre-wrap !important" : "none"};
           word-break: ${queries.wordwrap == "true" ? "break-word !important" : "unset"};
         }
         @media only screen and (max-width: 450px) {
