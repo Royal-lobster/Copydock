@@ -14,11 +14,11 @@ Copydock is a text sharing app where you can paste the text and share it with yo
 ## Installation
 
 ```bash
-git clone https://github.com/Royal-lobster/copydock-nextjs
+git clone https://github.com/Royal-lobster/copydock
 
-cd copydock-nextjs
+cd copydock
 
- npm install
+npm install
 ```
 ## Running the Application
 
