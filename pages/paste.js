@@ -197,7 +197,7 @@ export default function pastePage({ APP_URL, TINYURL_TOKEN }) {
               transition="slide-right"
               transitionDuration={300}
               transitionTimingFunction="ease"
-              label="If turned OFF, the link will NOT be shortened. Please turn this OFF if you are sharing CONFIDENTIAL information"
+              label="If turned OFF, the link will NOT be shortened. Please turn this OFF if you don't want to shorten the link"
               withArrow
             >
               <Switch
