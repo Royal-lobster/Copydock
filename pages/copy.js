@@ -17,13 +17,15 @@ function copyPage() {
   const clipboard = useClipboard({ timeout: 3000 });
 
   useEffect(() => {
-    console.log(queries.wordwrap);
+    console.log(queries.color);
   }, [queries]);
   useEffect(async () => {
     let fetchedQueries = queryString.parse(router.asPath.split("?")[1]);
     await setQueries(fetchedQueries);
     const compressed = /(?<=\&data=).*/g.exec(router.asPath)[0];
-    const decompressed = await LZUTF8.decompress(compressed, { inputEncoding: "Base64" });
+    const decompressed = await LZUTF8.decompress(compressed, {
+      inputEncoding: "Base64",
+    });
     setPasteData(decompressed);
   }, []);
 
@@ -35,14 +37,24 @@ function copyPage() {
         <div className="copyPage__container">
           <div className="copyPage__containerHead">
             <Title className="copyPage__title" order={5}>
-              <span style={{ color: "#999999", fontWeight: "600" }}>FileName :</span>{" "}
+              <span style={{ color: "#999999", fontWeight: "600" }}>
+                FileName :
+              </span>{" "}
               {queries.title ? truncateString(queries.title, 40) : "Untitled"}
             </Title>
             <Group className="copy__HeadBtnGrp">
-              <Button style={{ display: "block" }} leftIcon={<CopyIcon />} onClick={() => clipboard.copy(pasteData)}>
+              <Button
+                style={{ display: "block" }}
+                leftIcon={<CopyIcon />}
+                onClick={() => clipboard.copy(pasteData)}
+              >
                 {clipboard.copied ? "Copied" : "Copy"}
               </Button>
-              <Button leftIcon={<FilePlusIcon />} color="green" onClick={() => router.push("/")}>
+              <Button
+                leftIcon={<FilePlusIcon />}
+                color="green"
+                onClick={() => router.push("/")}
+              >
                 Create New
               </Button>
             </Group>
@@ -62,7 +74,14 @@ function copyPage() {
 
       <style jsx global>{`
         body {
-          background: ${["1A1B1E", "364264", "476856", "624c4c", "747450", "785674"].includes(queries.color)
+          background: ${[
+            "1A1B1E",
+            "364264",
+            "476856",
+            "624c4c",
+            "747450",
+            "785674",
+          ].includes(queries.color)
             ? "#" + queries.color
             : "#1A1B1E"};
         }
@@ -97,8 +116,12 @@ function copyPage() {
         code[class*="language-"],
         pre[class*="language-"] {
           tab-size: 4;
-          white-space: ${queries.wordwrap == "true" ? "pre-wrap !important" : "none"};
-          word-break: ${queries.wordwrap == "true" ? "break-word !important" : "unset"};
+          white-space: ${queries.wordwrap == "true"
+            ? "pre-wrap !important"
+            : "none"};
+          word-break: ${queries.wordwrap == "true"
+            ? "break-word !important"
+            : "unset"};
         }
         @media only screen and (max-width: 450px) {
           .copyPage__containerHead {

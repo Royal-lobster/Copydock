@@ -15,18 +15,13 @@ import {
 import LZUTF8 from "lzutf8";
 import { useClipboard } from "@mantine/hooks";
 import { useNotifications } from "@mantine/notifications";
-import { FileTextIcon, CheckIcon, ClipboardCopyIcon } from "@modulz/radix-icons";
+import {
+  FileTextIcon,
+  CheckIcon,
+  ClipboardCopyIcon,
+} from "@modulz/radix-icons";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-
-export const getStaticProps = async () => {
-  return {
-    props: {
-      APP_URL: process.env.APPLICATION_URL,
-      TINYURL_TOKEN: process.env.TINYURL_ACCESS_TOKEN,
-    },
-  };
-};
 
 export default function pastePage({ APP_URL, TINYURL_TOKEN }) {
   // mantime hooks
@@ -46,30 +41,29 @@ export default function pastePage({ APP_URL, TINYURL_TOKEN }) {
   const handleLinkCopyRequest = async () => {
     setLoading(true);
     // generate a url with the data
-    let compressed = await LZUTF8.compress(pasteValue, { outputEncoding: "Base64" });
-    let generatedURL = `${APP_URL}/copy?title=${pasteTitleValue}&color=${pasteColorValue}&wordwrap=${doWordWrap}&data=${compressed}`;
-
+    let compressed = await LZUTF8.compress(pasteValue, {
+      outputEncoding: "Base64",
+    });
+    let generatedURL = `${
+      window.location.origin
+    }/copy?title=${pasteTitleValue}&color=${pasteColorValue.substring(
+      0
+    )}&wordwrap=${doWordWrap}&data=${compressed}`;
+    console.log(generatedURL);
     // shorten the generated url with TINYURL
     if (doShorten) {
-      const response = await fetch("https://api.tinyurl.com/create", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${TINYURL_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          url: generatedURL,
-        }),
-      });
-      const body = await response.json();
+      const response = await fetch(
+        `https://tinyurl.com/api-create.php?url=${generatedURL}`
+      );
+      const shortenedLink = await response.text();
       // copy the url in the clipboard
-      if (body?.data?.tiny_url) {
-        clipboard.copy(body.data.tiny_url);
-        setShortLink(body.data.tiny_url);
+      if (shortenedLink) {
+        clipboard.copy(shortenedLink);
+        setShortLink(shortenedLink);
         setOpened(true);
         notifications.showNotification({
           title: "Copied To Clipboard",
-          message: "Share URL : " + body.data.tiny_url,
+          message: "Share URL : " + shortenedLink,
         });
       } else {
         clipboard.copy(generatedURL);
@@ -102,7 +96,11 @@ export default function pastePage({ APP_URL, TINYURL_TOKEN }) {
               icon={<FileTextIcon />}
               placeholder="Name of File"
             />
-            <Group className="pastePage__pasteAreaMetaDataColorGroup" position="center" spacing="xs">
+            <Group
+              className="pastePage__pasteAreaMetaDataColorGroup"
+              position="center"
+              spacing="xs"
+            >
               <ColorSwatch
                 onClick={() => setPasteColorValue("1A1B1E")}
                 color="#1A1B1E"
@@ -170,11 +168,17 @@ export default function pastePage({ APP_URL, TINYURL_TOKEN }) {
                   leftIcon={<ClipboardCopyIcon />}
                   onClick={handleLinkCopyRequest}
                 >
-                  {clipboard.copied ? "Copied to Clipboard" : "Copy URL to Share"}
+                  {clipboard.copied
+                    ? "Copied to Clipboard"
+                    : "Copy URL to Share"}
                   <LoadingOverlay
                     overlayOpacity={1}
                     overlayColor="#1971c2"
-                    loaderProps={{ size: "sm", color: "white", variant: "bars" }}
+                    loaderProps={{
+                      size: "sm",
+                      color: "white",
+                      variant: "bars",
+                    }}
                     visible={loading}
                   />
                 </Button>
@@ -201,7 +205,11 @@ export default function pastePage({ APP_URL, TINYURL_TOKEN }) {
               withArrow
             >
               <Switch
-                style={{ backgroundColor: "#2C2E33", padding: "9px", borderRadius: "4px" }}
+                style={{
+                  backgroundColor: "#2C2E33",
+                  padding: "9px",
+                  borderRadius: "4px",
+                }}
                 checked={doShorten}
                 radius="xs"
                 onChange={(event) => setDoShorten(event.currentTarget.checked)}
@@ -218,10 +226,16 @@ export default function pastePage({ APP_URL, TINYURL_TOKEN }) {
               withArrow
             >
               <Switch
-                style={{ backgroundColor: "#2C2E33", padding: "9px", borderRadius: "4px" }}
+                style={{
+                  backgroundColor: "#2C2E33",
+                  padding: "9px",
+                  borderRadius: "4px",
+                }}
                 checked={!doWordWrap}
                 radius="xs"
-                onChange={(event) => setDoWordWrap(!event.currentTarget.checked)}
+                onChange={(event) =>
+                  setDoWordWrap(!event.currentTarget.checked)
+                }
                 label="Code Mode"
               />
             </Tooltip>
@@ -232,7 +246,14 @@ export default function pastePage({ APP_URL, TINYURL_TOKEN }) {
       <style jsx global>{`
         body {
           background: ${
-            ["1A1B1E", "364264", "476856", "624c4c", "747450", "785674"].includes(pasteColorValue)
+            [
+              "1A1B1E",
+              "364264",
+              "476856",
+              "624c4c",
+              "747450",
+              "785674",
+            ].includes(pasteColorValue)
               ? "#" + pasteColorValue
               : "#1A1B1E"
           };]};
